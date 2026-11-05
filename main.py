@@ -1,8 +1,10 @@
 import os
+from pathlib import Path
 from typing import Literal
 
 import httpx
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
 app = FastAPI(title="Vidora API", version="0.3.0")
@@ -23,11 +25,8 @@ class ScriptRequest(BaseModel):
 
 @app.get("/")
 def home():
-    return {
-        "app": "Vidora",
-        "message": "Vidora script generation API is running.",
-        "docs": "/docs",
-    }
+    """Serve the Vidora web interface."""
+    return FileResponse(Path(__file__).parent / "static" / "index.html")
 
 
 def build_prompt(request: ScriptRequest) -> str:
