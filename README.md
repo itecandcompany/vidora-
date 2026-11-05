@@ -1,6 +1,6 @@
 # Vidora
 
-AI-powered YouTube video creation platform. This repository currently contains the first backend feature: AI script generation.
+AI-powered YouTube video creation platform. The current backend prototype provides AI script generation through OpenAI, Google Gemini, or Anthropic Claude.
 
 ## Run the API
 
@@ -12,19 +12,21 @@ AI-powered YouTube video creation platform. This repository currently contains t
    pip install -r requirements.txt
    ```
 
-4. Set your OpenAI API key in your local environment. Do not commit API keys.
+4. Set the provider and its API key in your local environment. Never commit real API keys. You can copy `.env.example` as a reference; the application reads environment variables and does not automatically load a `.env` file.
 
-   **Windows PowerShell**
+   **Windows PowerShell example for Gemini**
    ```powershell
-   $env:OPENAI_API_KEY="your-api-key"
+   $env:AI_PROVIDER="gemini"
+   $env:GEMINI_API_KEY="your-gemini-api-key"
    ```
 
-   **macOS/Linux**
+   **macOS/Linux example for Gemini**
    ```bash
-   export OPENAI_API_KEY="your-api-key"
+   export AI_PROVIDER="gemini"
+   export GEMINI_API_KEY="your-gemini-api-key"
    ```
 
-   Optionally set `OPENAI_MODEL` to a model available to your API account. The default is `gpt-4.1-mini`.
+   For OpenAI, set `AI_PROVIDER=openai` and `OPENAI_API_KEY`. For Claude, set `AI_PROVIDER=anthropic` and `ANTHROPIC_API_KEY`. Model names can be customized using `OPENAI_MODEL`, `GEMINI_MODEL`, or `ANTHROPIC_MODEL`.
 
 5. Start the server:
 
@@ -34,7 +36,7 @@ AI-powered YouTube video creation platform. This repository currently contains t
 
 6. Open [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) to try the interactive API.
 
-## First endpoint
+## Script generation endpoint
 
 `POST /generate-script`
 
@@ -42,15 +44,16 @@ Example request:
 
 ```json
 {
-  "topic": "How artificial intelligence is changing education",
-  "duration_seconds": 120,
-  "style": "engaging and informative",
-  "language": "English"
+  "topic": "What if Earth suddenly stopped spinning?",
+  "duration_seconds": 30,
+  "style": "cinematic and engaging YouTube Short narration",
+  "language": "English",
+  "provider": "gemini"
 }
 ```
 
-The endpoint returns the generated narration script as JSON. It needs a valid `OPENAI_API_KEY`; without one, it returns a clear configuration error.
+The `provider` field is optional. If omitted, Vidora uses `AI_PROVIDER`, which defaults to `openai`. Supported values are `openai`, `gemini`, and `anthropic`. Each provider requires its own API key and account access.
 
 ## Current status
 
-This is an early backend prototype. The web dashboard, text-to-speech, visual generation, video editing, user accounts, and export workflow have not been implemented yet.
+This is an early backend prototype. Text-to-speech, visual generation, video editing, user accounts, and export workflows have not yet been implemented. Provider API calls have not been verified against live credentials in this repository change.
